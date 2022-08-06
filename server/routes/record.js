@@ -170,7 +170,7 @@ recordRoutes.route('/game').post(async function (req, res) {
   } else {
     // We assume this is a draw otherwise, even if the input is malformed, like just one winner or one loser
     ranking.updateRatings([
-      player1Glicko, player2Glicko, 0.5
+      [player1Glicko, player2Glicko, 0.5]
     ]);
 
     player1.draws += 1;
