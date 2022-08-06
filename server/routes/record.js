@@ -33,16 +33,17 @@ const settings = {
  */
 recordRoutes.route('/player/:id').get(async function (req, res) {
   const dbConnect = dbo.getDb();
+  const playerId = req.params.id;
 
   dbConnect
     .collection('players')
     .findOne({
-      _id: req.body.id
+      _id: playerId
     }, function (err, result) {
       if (err) {
-        res.status(400).send(`Error fetching player with id: ${req.body.id}`);
+        res.status(400).send(`Error fetching player with id: ${playerId}`);
       } else {
-        res.json(result);
+        res.json(result == null ? `Player ${playerId} not found` : result);
       }
     });
 });
@@ -125,6 +126,11 @@ recordRoutes.route('/game/result').post(async function (req, res) {
 
   const player1 = await retrievePlayer(participants[0]);
   const player2 = await retrievePlayer(participants[1]);
+
+  if (player1 == null || player2 == null) {
+    res.status(400).send(`Not all participants exist in database.`);
+    return;
+  }
 
   /**
    * From Glicko docs, it's more ideal to keep track of matches and then update
