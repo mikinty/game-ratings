@@ -84,6 +84,7 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
   }
 
   const playerData = {
+    _id: playerId,
     player_id: playerId,
     rating: DEFAULT_RATING,
     wins: 0,
@@ -98,7 +99,7 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
         res.status(400).send(`Error inserting player!\n${err}`);
       } else {
         console.log(`Added a new player with id ${playerId}`);
-        res.status(204).send();
+        res.status(204).send(`Added a new player with id ${playerId}`);
       }
     });
 });
