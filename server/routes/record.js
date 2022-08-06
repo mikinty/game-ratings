@@ -1,5 +1,6 @@
 const express = require('express');
 const glicko2 = require('glicko2');
+const crypto = require('node:crypto');
 
 // recordRoutes is an instance of the express router.
 // We use it to define our routes.
@@ -74,8 +75,9 @@ recordRoutes.route('/top/:limit?').get(async function (req, res) {
 /**
  * Create a new player, with optional id if specified
  */
-recordRoutes.route('/player/create/:id?').post(async function (req, res) {
-  let playerId = `player ${crypto.randomBytes(6).toString('hex')}`
+recordRoutes.route('/create/:id?').post(async function (req, res) {
+  const dbConnect = dbo.getDb();
+  let playerId = `player_${crypto.randomBytes(6).toString('hex')}`
 
   if (req.body.id != null) {
     playerId = req.body.id;
@@ -95,7 +97,7 @@ recordRoutes.route('/player/create/:id?').post(async function (req, res) {
       if (err) {
         res.status(400).send(`Error inserting player!\n${err}`);
       } else {
-        console.log(`Added a new player with id ${player_id}`);
+        console.log(`Added a new player with id ${playerId}`);
         res.status(204).send();
       }
     });
