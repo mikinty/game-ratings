@@ -79,8 +79,8 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
   const dbConnect = dbo.getDb();
   let playerId = `player_${crypto.randomBytes(6).toString('hex')}`
 
-  if (req.body.id != null) {
-    playerId = req.body.id;
+  if (req.params.id != null) {
+    playerId = req.params.id;
   }
 
   const playerData = {
@@ -107,7 +107,7 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
 /**
  * Add a game result to the database
  */
-recordRoutes.route('/game/result').post(async function (req, res) {
+recordRoutes.route('/game').post(async function (req, res) {
   const dbConnect = dbo.getDb();
 
   // Update ratings and game stats for involved players
