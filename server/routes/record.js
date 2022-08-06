@@ -51,9 +51,9 @@ recordRoutes.route('/player/:id').get(async function (req, res) {
 /**
  * Return top players
  */
-recordRoutes.route('/player/top/:limit?').get(async function (req, res) {
+recordRoutes.route('/top/:limit?').get(async function (req, res) {
   const dbConnect = dbo.getDb();
-  const limit = req.body.limit || 10;
+  const limit = isNaN(parseInt(req.params.limit)) ? 10 : parseInt(req.params.limit);
 
   dbConnect
     .collection('players')
