@@ -60,7 +60,7 @@ recordRoutes.route('/top/:limit?').get(async function (req, res) {
     .collection('players')
     .find()
     .sort({
-      rating: 1
+      rating: -1
     })
     .limit(limit)
     .toArray(function (err, result) {
