@@ -6,7 +6,41 @@ Built for the Aurory coding challenge.
 
 ## How to run
 
-I purposely did not commit the `server/config.env` since it contains my login, but please paste in your own to connect to your database.
+You will need to setup a database before you can run the node application.
+
+### Database setup
+
+You will need a [MongoDB Atlas Database](https://www.mongodb.com/cloud/atlas/lp/try6) in order to power the backend. After you've created an instance, please add a `config.env` under the `server` directory, with the contents
+
+```env
+ATLAS_URI=mongodb+srv://<username>:<password>@<DATABASE_NAME>?retryWrites=true&w=majority
+```
+
+NOTE: I purposely did not commit the `server/config.env` since it contains my login, but please paste in your own to connect to your database.
+
+### Node Server
+
+This is much simpler. Go into the `server/` directory and install packages first
+
+```
+npm install
+```
+
+And then to start the app, run
+
+```
+npm start
+```
+
+After running the app, you will get some output like
+
+```
+[nodemon] starting `node server.js`
+Successfully connected to MongoDB.
+Server is running on port: 5001
+```
+
+You want to see `Successfully connected to MongoDB.` to know your DB is up and running, and you want to note the port so you can make requests there.
 
 ## Docs
 
