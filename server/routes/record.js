@@ -113,7 +113,7 @@ recordRoutes.route('/game').post(async function (req, res) {
   // Update ratings and game stats for involved players
   const participants = req.body.participants;
 
-  if (participants.length != 2) {
+  if (participants == undefined || participants.length != 2) {
     res.status(400).send(`Did not receive 2 participants in: ${req.body.participants}`);
     return;
   }
@@ -156,38 +156,51 @@ recordRoutes.route('/game').post(async function (req, res) {
       res.status(400).send(`Received a game with the same winner and loser`);
       return;
     }
+
+    const player1Wins = req.body.outcome.winner == player1.player_id
     ranking.updateRatings([
-      player1Glicko, player2Glicko, req.body.outcome.winner == player1.player_id
+      [player1Glicko, player2Glicko, player1Wins]
     ]);
+
+    player1.wins += player1Wins;
+    player1.losses += !player1Wins;
+
+    player2.wins += !player1Wins;
+    player2.losses += player1Wins;
   } else {
     // We assume this is a draw otherwise, even if the input is malformed, like just one winner or one loser
     ranking.updateRatings([
       player1Glicko, player2Glicko, 0.5
     ]);
+
+    player1.draws += 1;
+    player2.draws += 1;
   }
 
-  // Update ratings for players
-  function updateRatingForPlayer(id, rating) {
+  player1.rating = player1Glicko.getRating();
+  player2.rating = player2Glicko.getRating();
+
+  function updateStatsForPlayer(id, newStats) {
     dbConnect
       .collection('players')
-      .updateOne({ _id: id }, { $set: { rating: rating } }, function (err, _result) {
+      .updateOne({ _id: id }, { $set: newStats }, function (err, _result) {
         if (err) {
           res
             .status(400)
-            .send(`Error rating for ${id}`);
+            .send(`Error updating stats for player "${id}"`);
         } else {
-          console.log(`New rating for ${id}: ${rating}`);
+          console.log(`New rating for player "${id}": ${newStats.rating}`);
         }
       });
   }
 
-  updateRatingForPlayer(player1.player_id, player1Glicko.getRating());
-  updateRatingForPlayer(player2.player_id, player2Glicko.getRating());
+  updateStatsForPlayer(player1.player_id, player1);
+  updateStatsForPlayer(player2.player_id, player2);
 
   // Add game to the database
   const gameData = {
     _id: req.body.id,
-    date: req.body.string,
+    date: req.body.date,
     participants: req.body.participants,
     outcome: req.body.outcome
   }
