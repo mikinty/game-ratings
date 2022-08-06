@@ -4,6 +4,10 @@ Create an app that can simulate games between many players and show stats about 
 
 Built for the Aurory coding challenge.
 
+## How to run
+
+I purposely did not commit the `server/config.env` since it contains my login, but please paste in your own to connect to your database.
+
 ## Docs
 
 I might make some actual docs (e.g. wiki), but for now
@@ -12,14 +16,15 @@ I might make some actual docs (e.g. wiki), but for now
 
 It makes sense to store this object by `id`
 
-```
+```json
 {
   "id":"gr-1",
   "date":"string",
   "participants ": [ "player-1", "player-2"],
   "outcome":{
-  "winner":"player-1",
-  "loser":"player-2"
+      "winner":"player-1",
+      "loser":"player-2"
+  }
 }
 ```
 
@@ -27,7 +32,7 @@ It makes sense to store this object by `id`
 
 It makes sense to store this object by `player_id`
 
-```
+```json
 {
   "player_id":"player-1",
   "rating":"7250",
@@ -46,7 +51,7 @@ rating (example)
   - GET request `player(id: string)`
 - Allow clients to fetch the top 10 players by rating
   - GET request maybe `top(n: int)`
-  
+
 ### Player Ratings
 
 Calculated by [Glicko](https://en.wikipedia.org/wiki/Glicko_rating_system), which is like ELO but has some improvements.
@@ -54,7 +59,7 @@ Calculated by [Glicko](https://en.wikipedia.org/wiki/Glicko_rating_system), whic
 We are likely to use the [`glicko npm package`](https://github.com/mmai/glicko2js) so we don't have to do all the complicated math.
 
 ## Initial plan
-  
+
 - I need to figure out what sort of backend to store this in. I'm thinking of just doing a simple Express or Django backend for now. Probably use Express so I can do node. Going to be honest I wish I knew more about backend choices, but I've only ever used Express before.
 - Then I'll set up the database
 - Then I'll set up the API endpoints
