@@ -43,7 +43,11 @@ const settings = {
  *        description: ID of the player to retrieve
  *    responses:
  *      200:
- *        description: Success
+ *        description: A PlayerRating object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#components/schemas/PlayerRating"
  *      400:
  *        description: Player with ID not found or database retrieval error
  */
@@ -79,7 +83,12 @@ recordRoutes.route('/player/:id').get(async function (req, res) {
  *        description: Maximum top players to retrieve
  *    responses:
  *      200:
- *        description: Success
+ *        description: An array of the top players
+ *        content:
+ *          application/json:
+ *            items:
+ *              type:
+ *                $ref: "#components/schemas/PlayerRating"
  *      400:
  *        description: Database retrieval error
  */
