@@ -65,7 +65,23 @@ recordRoutes.route('/player/:id').get(async function (req, res) {
 });
 
 /**
- * Return top players
+ * @swagger
+ * /top/{limit}:
+ *  get:
+ *    description: Returns the top limit (default 10) players with highest ratings
+ *    parameters:
+ *      - in: path
+ *        name: limit
+ *        schema:
+ *          type: integer
+ *          default: 10
+ *        required: false
+ *        description: Maximum top players to retrieve
+ *    responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Database retrieval error
  */
 recordRoutes.route('/top/:limit?').get(async function (req, res) {
   const dbConnect = dbo.getDb();
