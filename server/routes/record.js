@@ -30,7 +30,22 @@ const settings = {
 };
 
 /**
- * Return the stats for a player
+ * @swagger
+ * /player/{id}:
+ *  get:
+ *    description: Returns stats for a player with the provided id
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ID of the player to retrieve
+ *    responses:
+ *      200:
+ *        description: Success
+ *      400:
+ *        description: Player with ID not found or database retrieval error
  */
 recordRoutes.route('/player/:id').get(async function (req, res) {
   const dbConnect = dbo.getDb();
