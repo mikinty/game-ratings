@@ -104,7 +104,22 @@ recordRoutes.route('/top/:limit?').get(async function (req, res) {
 });
 
 /**
- * Create a new player, with optional id if specified
+ * @swagger
+ * /create/{id}:
+ *  get:
+ *    description: Create a new player, with optional id if specified. If the id is not specified, a random id will be generated in the format `player_<6-digit hash>`
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: false
+ *        description: id of player to create
+ *    responses:
+ *      204:
+ *        description: Player successfully created
+ *      400:
+ *        description: Player creation error
  */
 recordRoutes.route('/create/:id?').post(async function (req, res) {
   const dbConnect = dbo.getDb();
