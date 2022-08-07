@@ -106,7 +106,7 @@ recordRoutes.route('/top/:limit?').get(async function (req, res) {
 /**
  * @swagger
  * /create/{id}:
- *  get:
+ *  post:
  *    description: Create a new player, with optional id if specified. If the id is not specified, a random id will be generated in the format `player_<6-digit hash>`
  *    parameters:
  *      - in: path
@@ -151,7 +151,22 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
 });
 
 /**
- * Add a game result to the database
+ * @swagger
+ * /game:
+ *  post:
+ *    description: Add a game result to the database, and update ratings of players involved.
+ *    parameters:
+ *      - in: body
+ *        name: GameResult
+ *        schema:
+ *          $ref: "#components/schemas/GameResult"
+ *        required: true
+ *        description: information about the game
+ *    responses:
+ *      204:
+ *        description: Game saved with player ratings updated.
+ *      400:
+ *        description: Game processing error
  */
 recordRoutes.route('/game').post(async function (req, res) {
   const dbConnect = dbo.getDb();
