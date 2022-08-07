@@ -64,6 +64,36 @@ const swaggerOptions = {
               description: "Describes the winner and loser of the game. If there is a draw, none are specified."
             }
           }
+        },
+        PlayerRating: {
+          type: Object,
+          properties: {
+            player_id: {
+              type: String,
+              description: "ID of a player",
+              example: "player1"
+            },
+            rating: {
+              type: Number,
+              description: "Glick rating of player",
+              example: 1500
+            },
+            wins: {
+              type: Number,
+              description: "Number of wins by the player",
+              example: 10
+            },
+            losses: {
+              type: Number,
+              description: "Number of losses by the player",
+              example: 2
+            },
+            draws: {
+              type: Number,
+              description: "Number of draws by the player",
+              example: 1
+            }
+          }
         }
       }
     }
