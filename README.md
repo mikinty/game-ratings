@@ -44,7 +44,7 @@ You want to see `Successfully connected to MongoDB.` to know your DB is up and r
 
 ## Docs
 
-I might make some actual docs (e.g. wiki), but for now
+The schemas are more formally defined in the `[server/server.js](./server/server.js)`, but here are what the data types look like
 
 ### `GameResult` object
 
@@ -52,27 +52,26 @@ It makes sense to store this object by `id`
 
 ```json
 {
-  "id":"gr-1",
-  "date":"string",
-  "participants ": [ "player-1", "player-2"],
+  "id": "gr-1",
+  "date": "string",
+  "participants ": ["player-1", "player-2"],
   "outcome":{
-      "winner":"player-1",
-      "loser":"player-2"
+      "winner": "player-1",
+      "loser": "player-2"
+      // This is empty if there is a draw
   }
 }
 ```
 
 ### `PlayerRating` object
 
-It makes sense to store this object by `player_id`
-
 ```json
 {
   "player_id":"player-1",
-  "rating":"7250",
-  "wins":27,
-  "losses":15,
-  "draws":2
+  "rating": 7250,
+  "wins": 27,
+  "losses": 15,
+  "draws": 2
 }
 ```
 
@@ -99,9 +98,51 @@ We are likely to use the [`glicko npm package`](https://github.com/mmai/glicko2j
 - Then I'll set up the API endpoints
 - Finally I'll have to do some testing
 
-### If I have time
+## Features that I wanted to implement but I didn't
 
-- I have a lot of UI ideas, but I think this is backend heavy, so maybe think of more API endpoints that might be useful
-  - Fetch games by player
-  - Fetch player rating over time (I'm def not storing this rn, but can maybe keep track of a history of ratings)
-  - Fetch players with similar ratings (good for matchmaking)
+- Fetch games by player
+- Fetch player rating over time (I'm def not storing this rn, but can maybe keep track of a history of ratings)
+- Be able to simulate many game results at once (e.g. a tournament) for more accurate
+- Fetch players with similar ratings with the given one (good for matchmaking)
+
+### Datamodel improvements
+
+- `PlayerRating`:
+  - Store rating deviation and volatility into a user's profile, this makes the ranking more accurate
+  - Store win, loss, draw streaks
+  - Store records against other players (although this is just an endpoint, query-able via the games)
+  - Store achievements
+  - Store hero type
+- `GameResult`:
+  - The date should be a more formal date type, not just a string (I think MongoDB supports this)
+  - Game type -- I assume there are many different types of games
+  - Game duration
+
+## Testing
+
+I did not get to fully getting a testing working example, but here are some examples of tests that I wanted to get going
+
+- Test basic endpoints
+  - Test that creation and fetching a playergoing works: create a player, and then fetch it
+  - Test that fetching a nonexistent player errors out
+  - Test that creating a player with an existing username errors
+  - Test that the top 10 function works
+    - Test for different number of users
+    - Test that it is in sorted descending order
+  - Test that the game result processing works. E.g. the game is saved, and that the player ratings that are changed work
+    - Also test for players that don't exist, what happens?
+- Test other functions I didn't get to
+- Test reliability
+  - Not sure if you can do this in mocha, but try to send many requests (e.g. stress test) and see if it works
+
+## Making this Production-Ready
+
+- Obvious limit to this project is that everything is pretty small scale. The current code is only designed to run on one server and work with one database.
+  - I'm not sure, but I think multiple servers can still connect to the MongoDB instance I have, so that's actually ok. The issue is the MongoDB instance load is probably not going to support enough writes to scale up. This can be easily fixed by upgrading to a larger instance.
+  - To get multiple servers, we can probably use AWS Elastic Beanstalk, so the servers will scale and decrease based on the load
+  - For performance, it's likely better that we data shard so that we separate the data into several databases so that they aren't too overloaded with so many requests, and that we can optimize maybe regions for certain uses, to reduce ping. E.g. we have databases regional by North America, South America, Asia, etc.
+  - We should probably have all the data be backed up (I'm sure Amazon offers this somewhere, maybe S3)
+- We should protect our API against DDOS and random people in general
+  - Probably need to give clients some sort of session key that verifies they are actual players
+  - This also prevents hacking, so random people don't add results to the game (I think Blockchain might solve this as well, depending on if the game results are stored on the chain)
+- Is storing in plaintext the best idea? This data actually seems ok since everything seems pretty public, but if we start getting into more private info, might be a good idea to do some sort of encryption
