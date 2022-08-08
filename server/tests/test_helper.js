@@ -10,10 +10,3 @@ mongoose.connection
     .on('error', (error) => {
         console.warn('Error : ', error);
     });
-
-    // runs before each test
-    beforeEach((done) => {
-        mongoose.connection.collections.users.drop(() => {
-        done();
-       });
-});

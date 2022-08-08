@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha --recursive --exit",
+    "test": "mocha tests/ --recursive --exit",
     "lint": "eslint .",
     "format": "prettier --single-quote --check .",
     "prepare": "cd ../ && husky install server/.husky"
@@ -17,6 +17,7 @@
     "mocha": "^10.0.0",
     "mongodb": "^3.6.6",
     "mongoose": "^6.5.1",
+    "supertest": "^6.2.4",
     "swagger-jsdoc": "^6.2.4",
     "swagger-ui-express": "^4.5.0"
   },

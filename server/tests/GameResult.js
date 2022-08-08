@@ -38,6 +38,7 @@ const GameResultSchema = new Schema({
         },
         description: "Describes the winner and loser of the game. If there is a draw, none are specified."
       }
+    }
 });
 
 const GameResult = mongoose.model('GameResult', GameResultSchema);
