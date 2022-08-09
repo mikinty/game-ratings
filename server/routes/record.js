@@ -154,7 +154,7 @@ recordRoutes.route('/create/:id?').post(async function (req, res) {
         res.status(400).send(`Error inserting player!\n${err}`);
       } else {
         console.log(`Added a new player with id ${playerId}`);
-        res.status(204).send(`Added a new player with id ${playerId}`);
+        res.status(201).send(`Added a new player with id ${playerId}`);
       }
     });
 });
